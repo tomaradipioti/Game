@@ -1,0 +1,101 @@
+package me.tomaradipioti.game;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+
+public class Main extends JavaPlugin implements Listener {
+	
+	
+	
+	
+	//TO DO LIST
+	//Add particles on death, so when a player dies it spawns particles at his death location
+	//Make a inventory GUI that allows you to join teams or jut make a /join team command.
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onPlayerJoin2(PlayerJoinEvent event) {
+		Player p = event.getPlayer();
+		
+	
+	ScoreboardManager manager = Bukkit.getScoreboardManager();
+	Scoreboard board = manager.getNewScoreboard();
+	
+	Objective objective = board.registerNewObjective("showhealth", "health");
+	
+	objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+	objective.setDisplayName("§c♥");
+	
+	for(Player online : Bukkit.getOnlinePlayers()) {
+		online.setScoreboard(board);
+		
+
+	}
+	
+	
+	
+			
+
+	
+	
+	
+	}
+
+
+
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		Player p = event.getPlayer();
+		event.setCancelled(true);
+		if(p.hasPermission("block.destroy"))event.setCancelled(false);
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		Player p = event.getPlayer();
+		event.setQuitMessage(ChatColor.RED + p.getName() + " has left the game");
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player p = event.getPlayer();
+		event.setJoinMessage(ChatColor.GOLD + p.getName() + " has joined the game");
+		event.getPlayer().sendMessage(ChatColor.YELLOW + "-========================*=========================-");
+		event.getPlayer().sendMessage(ChatColor.BOLD + "                         YOU HAVE JOINED THE GAME                           ");
+		event.getPlayer().sendMessage(ChatColor.YELLOW + "-=========================*=========================-");
+		event.getPlayer().playSound(p.getLocation(), Sound.LEVEL_UP, 1, 50);
+	}
+	
+	@EventHandler
+	public void onPlayerKill(PlayerDeathEvent event) {
+		Player p = event.getEntity().getPlayer();
+		Player killer = event.getEntity().getKiller();
+		Player killed = event.getEntity().getPlayer();
+		killer.playSound(p.getLocation(), Sound.FIREWORK_LARGE_BLAST2, 1, 1);}
+	
+	public void onEnable() {
+		Bukkit.getServer().getPluginManager().registerEvents(this, this);
+		
+		
+	}
+	
+	
+	public void onDisable() {
+		
+	}
+}
+	
